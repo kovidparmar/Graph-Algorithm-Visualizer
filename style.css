@@ -322,6 +322,45 @@ canvas {
     color: #4a5568;
     font-size: 14px;
 }
+.color-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.color-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.color-input label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #4a5568;
+    text-align: center;
+}
+
+.color-input input[type="color"] {
+    width: 50px;
+    height: 35px;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+    cursor: pointer;
+    background: none;
+}
+
+.color-input input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+    border-radius: 4px;
+}
+
+.color-input input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 4px;
+}
 
 /* Responsive design for smaller screens */
 @media (max-width: 768px) {

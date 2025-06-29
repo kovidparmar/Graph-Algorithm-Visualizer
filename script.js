@@ -859,8 +859,26 @@ class GraphVisualizer {
                 if (node && step.distance !== undefined) {
                     node.distance = step.distance;
                 }
-                break;
+                // Add this for Floyd-Warshall updates
+                if (step.from && step.to && step.via) {
+                    const fromNode = this.graph.nodes.get(step.from);
+                    const toNode = this.graph.nodes.get(step.to);
+                    const viaNode = this.graph.nodes.get(step.via);
 
+                    // Temporarily highlight the nodes involved in this update
+                    if (fromNode) fromNode.inQueue = true;
+                    if (toNode) toNode.visited = true;
+                    if (viaNode) viaNode.inPath = true;
+
+                    // Clear highlights after a short delay
+                    setTimeout(() => {
+                        if (fromNode) fromNode.inQueue = false;
+                        if (toNode) toNode.visited = false;
+                        if (viaNode) viaNode.inPath = false;
+                        this.draw();
+                    }, this.animation.speed / 2);
+                }
+                break;
             case 'path':
                 // Highlight the shortest path
                 for (let nodeId of step.path) {
@@ -915,15 +933,20 @@ class GraphVisualizer {
                 }
                 matrixHtml += '</table>';
 
-                // Replace instead of append
-                document.getElementById('algorithmDetails').innerHTML = matrixHtml;
-                break;
+                // Show both the step message AND the matrix
+                document.getElementById('algorithmDetails').innerHTML =
+                    `<p><strong>Step ${this.animation.step + 1}/${this.animation.steps.length}:</strong> ${step.message}</p>` +
+                    matrixHtml;
+                return; // Exit early to avoid overwriting with the default message
 
         }
 
         // At the end of executeStep method, replace the existing line:
-        document.getElementById('algorithmDetails').innerHTML =
-            `<p><strong>Step ${this.animation.step + 1}/${this.animation.steps.length}:</strong> ${step.message}</p>`;
+        // Only update if we haven't already handled it (like matrix case)
+        if (step.type !== 'matrix') {
+            document.getElementById('algorithmDetails').innerHTML =
+                `<p><strong>Step ${this.animation.step + 1}/${this.animation.steps.length}:</strong> ${step.message}</p>`;
+        }
 
         this.draw();
         this.drawPathHighlight();
