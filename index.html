@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Algorithm Visualizer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Graph Algorithm Visualizer</h1>
+            <p>Create, manipulate, and visualize graph algorithms step-by-step</p>
+        </div>
+
+        <button class="btn-warning" id="pauseBtn" onclick="pauseVisualization()">Pause</button>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <!-- Graph Creation Section -->
+                <div class="section">
+                    <h3>Graph Creation</h3>
+                    <div class="toggle-group">
+                        <div class="toggle">
+                            <input type="checkbox" id="directed" onchange="toggleDirected()">
+                            <label for="directed">Directed</label>
+                        </div>
+                        <div class="toggle">
+                            <input type="checkbox" id="weighted" onchange="toggleWeighted()">
+                            <label for="weighted">Weighted</label>
+                        </div>
+                    </div>
+                    <div class="toggle">
+                        <input type="checkbox" id="gridMode" onchange="toggleGridMode()">
+                        <label for="gridMode">Grid Mode (Pathfinding)</label>
+                    </div>
+                    <button class="btn-danger" onclick="clearGraph()">Clear Graph</button>
+                </div>
+
+                <!-- Manual Input Section -->
+                <div class="section">
+                    <h3>Manual Input</h3>
+                    <div class="input-group">
+                        <label for="inputFormat">Input Format:</label>
+                        <select id="inputFormat" onchange="updateInputExample()">
+                            <option value="adjacency_list">Adjacency List</option>
+                            <option value="adjacency_matrix">Adjacency Matrix</option>
+                            <option value="edge_list">Edge List</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="graphInput">Graph Data:</label>
+                        <textarea id="graphInput" placeholder="Enter graph data..."></textarea>
+                        <div class="examples" id="inputExample"></div>
+                    </div>
+                    <button class="btn-primary" onclick="parseGraphInput()">Load Graph</button>
+                    <div id="inputMessage"></div>
+                </div>
+
+                <!-- Algorithm Selection -->
+                <div class="section">
+                    <h3>Algorithm Visualization</h3>
+                    <div class="input-group">
+                        <label for="algorithm">Choose Algorithm:</label>
+                        <select id="algorithm">
+                            <option value="bfs">Breadth-First Search (BFS)</option>
+                            <option value="dfs">Depth-First Search (DFS)</option>
+                            <option value="dijkstra">Dijkstra's Algorithm</option>
+                            <option value="bellmanford">Bellman-Ford Algorithm</option>
+                            <option value="floydwarshall">Floyd-Warshall Algorithm</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="startNode">Start Node:</label>
+                        <input type="text" id="startNode" placeholder="Enter start node">
+                    </div>
+                    <div class="input-group" id="endNodeGroup">
+                        <label for="endNode">End Node (for Dijkstra):</label>
+                        <input type="text" id="endNode" placeholder="Enter end node">
+                    </div>
+                    <div class="controls">
+                        <button class="btn-primary" onclick="startVisualization()">Setup Step Mode</button>
+                        <button class="btn-success" onclick="startAutoVisualization()">Auto Play</button>
+                        <button class="btn-warning" id="pauseBtn" onclick="pauseVisualization()">Pause</button>
+                        <button class="btn-info" onclick="stepVisualization()">Step</button>
+                        <button class="btn-secondary" onclick="resetVisualization()">Reset</button>
+                    </div>
+                    <div class="speed-control">
+                        <label>Speed:</label>
+                        <input type="range" id="speed" min="1" max="10" value="5">
+                        <span id="speedValue">5</span>
+                    </div>
+                </div>
+
+                <!-- Customization -->
+                <div class="section">
+                    <h3>Appearance</h3>
+                    <div class="color-controls">
+                        <div class="color-input">
+                            <label>Node Color:</label>
+                            <input type="color" id="nodeColor" value="#4299e1" onchange="updateColors()">
+                        </div>
+                        <div class="color-input">
+                            <label>Visited Color:</label>
+                            <input type="color" id="visitedColor" value="#48bb78" onchange="updateColors()">
+                        </div>
+                        <div class="color-input">
+                            <label>Current Color:</label>
+                            <input type="color" id="currentColor" value="#ed8936" onchange="updateColors()">
+                        </div>
+                        <div class="color-input">
+                            <label>Path Color:</label>
+                            <input type="color" id="pathColor" value="#e53e3e" onchange="updateColors()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="graphCanvas" width="1000" height="600"></canvas>
+                <!-- ADD THIS SECTION HERE -->
+                <div class="instructions-panel">
+                    <h3>🖱️ Manual Graph Creation</h3>
+                    <div class="instructions-grid">
+                        <div class="instruction-item">
+                            <span class="instruction-icon">🔵</span>
+                            <span><strong>Create Node:</strong> Left-click on empty space</span>
+                        </div>
+                        <div class="instruction-item">
+                            <span class="instruction-icon">➡️</span>
+                            <span><strong>Create Edge:</strong> Hold Shift + Left-click source node, then click target
+                                node</span>
+                        </div>
+                        <div class="instruction-item">
+                            <span class="instruction-icon">↔️</span>
+                            <span><strong>Move Node:</strong> Left-click and drag node</span>
+                        </div>
+                        <div class="instruction-item">
+                            <span class="instruction-icon">❌</span>
+                            <span><strong>Delete Node:</strong> Right-click on node</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- END OF ADDITION -->
+                <div class="algorithm-info" id="algorithmInfo">
+                    <h4>Algorithm Information</h4>
+                    <div id="algorithmDetails"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
